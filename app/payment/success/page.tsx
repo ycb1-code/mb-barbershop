@@ -1,16 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
-export default function PaymentSuccessPage() {
-  const searchParams = useSearchParams();
-  const txRef = searchParams.get('ref');
-  const type = searchParams.get('type');
+function PaymentSuccessPageContent() {
+  const [isClient, setIsClient] = useState(false);
+  const [txRef, setTxRef] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(true);
   const [status, setStatus] = useState<'success' | 'failed'>('success');
   const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    // Mark as client-side
+    setIsClient(true);
+    
+    // Process URL params only on client
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ref = urlParams.get('ref');
+      const typeParam = urlParams.get('type');
+      setTxRef(ref);
+      setType(typeParam);
+    }
+  }, []);
 
   useEffect(() => {
     // For bookings, redirect immediately without verification
@@ -65,6 +79,18 @@ export default function PaymentSuccessPage() {
       setVerifying(false);
     }
   };
+
+  // Don't render until we're on the client side
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto mb-4"></div>
+          <h2 className="text-2xl font-bold text-amber-900 mb-2">Loading...</h2>
+        </div>
+      </div>
+    );
+  }
 
   if (verifying) {
     return (
@@ -179,5 +205,20 @@ export default function PaymentSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto mb-4"></div>
+          <h2 className="text-2xl font-bold text-amber-900 mb-2">Loading...</h2>
+        </div>
+      </div>
+    }>
+      <PaymentSuccessPageContent />
+    </Suspense>
   );
 }
