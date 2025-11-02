@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
-
+/* Tailwind CSS directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,7 +34,7 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: 'Poppins', Arial, Helvetica, sans-serif;
+    font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
   }
 }
 
