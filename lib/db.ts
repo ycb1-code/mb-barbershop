@@ -266,8 +266,8 @@ else productCategories = globalThis.dbCategories;
 // Admin users storage
 let adminUsers: AdminUser[] = globalThis.dbAdminUsers || [
   {
-    username: 'Yeamlak',
-    password_hash: '$2a$10$8K1p/a0dURXAm7QiTRqUzuN0/SpuDMaM3xd3/7o5n5r5KQF5cMoqG', // bcrypt hash of '904120227'
+    username: 'MB barbershop',
+    password_hash: '$2a$10$8K1p/a0dURXAm7QiTRqUzuN0/SpuDMaM3xd3/7o5n5r5KQF5cMoqG', // bcrypt hash of '12345678'
     salt: '$2a$10$8K1p/a0dURXAm7QiTRqUzu',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -283,7 +283,7 @@ const hashPassword = (password: string, salt: string): string => {
   // This is a simplified version for demonstration purposes only
   
   // Special handling for the default user with bcrypt hash
-  if (salt === '$2a$10$8K1p/a0dURXAm7QiTRqUzu' && password === '904120227') {
+  if (salt === '$2a$10$8K1p/a0dURXAm7QiTRqUzu' && password === '12345678') {
     return '$2a$10$8K1p/a0dURXAm7QiTRqUzuN0/SpuDMaM3xd3/7o5n5r5KQF5cMoqG';
   }
   
@@ -508,7 +508,7 @@ export const db = {
       if (!admin) return false;
       
       // Special handling for the default user
-      if (username === 'Yeamlak' && password === '904120227' && admin.salt === '$2a$10$8K1p/a0dURXAm7QiTRqUzu') {
+      if (username === 'MB barbershop' && password === '12345678' && admin.salt === '$2a$10$8K1p/a0dURXAm7QiTRqUzu') {
         return true;
       }
       
@@ -526,7 +526,7 @@ export const db = {
       // Verify current password
       // Special handling for default user with default password
       let isValid = false;
-      if (admin.username === 'Yeamlak' && currentPassword === '904120227' && admin.salt === '$2a$10$8K1p/a0dURXAm7QiTRqUzu') {
+      if (admin.username === 'MB barbershop' && currentPassword === '12345678' && admin.salt === '$2a$10$8K1p/a0dURXAm7QiTRqUzu') {
         isValid = true;
       } else {
         // For all other cases, check the hash
