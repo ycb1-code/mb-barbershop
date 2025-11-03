@@ -302,11 +302,6 @@ const generateSalt = (): string => {
   return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
 
-// Add this function to check if we're in a serverless environment (like Vercel)
-const isServerlessEnvironment = () => {
-  return process.env.NEXT_RUNTIME === 'edge' || process.env.NEXT_RUNTIME === 'serverless';
-};
-
 // Service CRUD operations
 export const db = {
   services: {

@@ -1,45 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Suspense } from 'react';
 
-function SuccessPageContent() {
-  const [isClient, setIsClient] = useState(false);
-  const [name, setName] = useState<string | null>(null);
-  const [service, setService] = useState<string | null>(null);
-  const [date, setDate] = useState<string | null>(null);
-  const [time, setTime] = useState<string | null>(null);
-  const [price, setPrice] = useState<string | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Mark as client-side
-    setIsClient(true);
-    
-    // Process URL params only on client
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      setName(urlParams.get('name'));
-      setService(urlParams.get('service'));
-      setDate(urlParams.get('date'));
-      setTime(urlParams.get('time'));
-      setPrice(urlParams.get('price'));
-      setStatus(urlParams.get('status'));
-    }
-  }, []);
-
-  // Don't render until we're on the client side
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-amber-900 mb-2">Loading...</h2>
-        </div>
-      </div>
-    );
-  }
+export default function SuccessPage() {
+  const searchParams = useSearchParams();
+  const name = searchParams.get('name');
+  const service = searchParams.get('service');
+  const date = searchParams.get('date');
+  const time = searchParams.get('time');
+  const price = searchParams.get('price');
+  const status = searchParams.get('status');
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
@@ -122,20 +93,5 @@ function SuccessPageContent() {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function SuccessPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto mb-4"></div>
-          <h2 className="text-2xl font-bold text-amber-900 mb-2">Loading...</h2>
-        </div>
-      </div>
-    }>
-      <SuccessPageContent />
-    </Suspense>
   );
 }

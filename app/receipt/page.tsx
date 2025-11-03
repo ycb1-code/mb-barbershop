@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Suspense } from 'react';
 
 interface BookingDetails {
   booking_id: string;
@@ -14,23 +14,11 @@ interface BookingDetails {
   phone: string;
 }
 
-function ReceiptPageContent() {
-  const [isClient, setIsClient] = useState(false);
-  const [txRef, setTxRef] = useState<string | null>(null);
+export default function ReceiptPage() {
+  const searchParams = useSearchParams();
+  const txRef = searchParams.get('ref');
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Mark as client-side
-    setIsClient(true);
-    
-    // Process URL params only on client
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const ref = urlParams.get('ref');
-      setTxRef(ref);
-    }
-  }, []);
 
   useEffect(() => {
     if (txRef) {
@@ -100,15 +88,6 @@ Made by promo4s
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
   };
-
-  // Don't render until we're on the client side
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-amber-900"></div>
-      </div>
-    );
-  }
 
   if (loading) {
     return (
@@ -264,17 +243,5 @@ Made by promo4s
         </div>
       </div>
     </div>
-  );
-}
-
-export default function ReceiptPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white flex items-center justify-center px-4">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-amber-900"></div>
-      </div>
-    }>
-      <ReceiptPageContent />
-    </Suspense>
   );
 }
